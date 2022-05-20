@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:OscVrcMaui.Views"
+       Title="OscVrcMaui"
+       x:Class="OscVrcMaui.AppShell">
+
+    <!--
+        The overall app visual hierarchy is defined here, along with navigation.
+    
+        https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/
+    -->
+
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BaseStyle" TargetType="Element">
+               
+            </Style>
+  
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <TabBar>
+        <Tab  Title="Osc" Icon="icon_feed.png">
+            <ShellContent ContentTemplate="{DataTemplate local:OSCPage}" />
+        </Tab>
+        <Tab   Title="Profiles" Icon="icon_feed.png" >
+            <ShellContent ContentTemplate="{DataTemplate local:ProfilesPage}" />
+        </Tab>
+        <Tab Title="About" Icon="icon_about.png" Route="AboutPage" >
+            <ShellContent  ContentTemplate="{DataTemplate local:AboutPage}"/>
+        </Tab>
+ 
+    
+    </TabBar>
+
+    <!--
+        If you would like to navigate to this content you can do so by calling
+        await Shell.Current.GoToAsync("//LoginPage");
+    -->
+    <!--<TabBar>
+        <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />
+    </TabBar>-->
+
+
+</Shell>

@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OscVrcMaui.Views.ProfilesPage"
+             Title="{Binding Title}"
+             xmlns:local="clr-namespace:OscVrcMaui.ViewModels"  
+             xmlns:model="clr-namespace:OscVrcMaui.Models"  >
+    <ContentPage.ToolbarItems>
+        <ToolbarItem  Text="Add new profile" Command="{Binding AddItemCommand}" />
+    </ContentPage.ToolbarItems>
+    <!--
+      x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
+      https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/data-binding/compiled-bindings
+    -->
+    <RefreshView x:DataType="local:ProfilesViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+        <CollectionView x:Name="ItemsListView"
+                ItemsSource="{Binding Items}"
+                SelectionMode="None" Header="" ItemSizingStrategy="MeasureAllItems">
+            <CollectionView.HeaderTemplate>
+                <DataTemplate>
+                    <StackLayout BackgroundColor="DimGray" Margin="10" Padding="10" Orientation="Horizontal">
+                        <Label HorizontalOptions="StartAndExpand" VerticalOptions="Center"  Text="Profile" 
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="Medium" />
+                        <Label HorizontalOptions="StartAndExpand" VerticalOptions="Center"  Text="Parameter" 
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="Medium" />
+                        <Label Text="Input" VerticalOptions="Center" 
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="Medium" />
+                        <Label Text="IsActive" VerticalOptions="Center" 
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                               HorizontalOptions="EndAndExpand"
+                            FontSize="Medium" />
+                    </StackLayout>
+
+                </DataTemplate>
+
+            </CollectionView.HeaderTemplate>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Margin="10">
+                    <Frame 
+       
+       BackgroundColor="#353535"
+       BorderColor="AliceBlue" 
+       CornerRadius="3"
+       Padding="5"
+       HorizontalOptions="Fill"
+       VerticalOptions="CenterAndExpand"
+       HasShadow="True">
+                        <StackLayout Padding="10" Margin="5"  HorizontalOptions="Fill" x:DataType="model:Profile" Orientation="Horizontal">
+                            <Label  HorizontalOptions="StartAndExpand" VerticalOptions="Center" Text="{Binding ProfileName}" 
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="Medium" />
+                            <Label  VerticalOptions="Center"  HorizontalOptions="StartAndExpand"  Text="{Binding ParameterName}" 
+                            LineBreakMode="NoWrap" 
+                            Style="{DynamicResource ListItemTextStyle}" 
+                            FontSize="Medium" />
+                            <Label  VerticalOptions="Center" Text="{Binding Input}" 
+                            LineBreakMode="NoWrap"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            FontSize="Medium" />
+                            <RadioButton  VerticalOptions="Center" HorizontalOptions="EndAndExpand" WidthRequest="45"  
+                                         IsEnabled="True"
+                            IsChecked="{Binding isActive}"  
+                            ></RadioButton>
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:ProfilesViewModel}}, Path=ItemTapped}"		
+                                CommandParameter="{Binding .}">
+                                </TapGestureRecognizer>
+                                <TapGestureRecognizer 
+                                NumberOfTapsRequired="2"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:ProfilesViewModel}}, Path=ItemDoubleTapped}"		
+                                CommandParameter="{Binding .}">
+                                </TapGestureRecognizer>
+                            </StackLayout.GestureRecognizers>
+                        </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </RefreshView>
+</ContentPage>

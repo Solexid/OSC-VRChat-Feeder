@@ -1,0 +1,94 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0-android;</TargetFrameworks>
+		<OutputType>Exe</OutputType>
+		<RootNamespace>OscVrcMaui</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!-- Display name -->
+		<ApplicationTitle>VRChat OSC Feeder</ApplicationTitle>
+
+		<!-- App Identifier -->
+		<ApplicationId>online.solexid.oscvrcmaui</ApplicationId>
+		<ApplicationId Condition="$(TargetFramework.Contains('-windows'))">3A93CC9B-3C12-4E07-BF32-AC9257A8783E</ApplicationId>
+
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+
+
+		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
+		<AndroidManifestApplicationName>VRChat OSC Feeder</AndroidManifestApplicationName>
+		<AndroidManifestApplicationPackageName>online.solexid.oscvrcmaui</AndroidManifestApplicationPackageName>
+		<AndroidManifestApplicationVersionNumber>1.0</AndroidManifestApplicationVersionNumber>
+		<AndroidManifestApplicationInstallLocation>internalOnly</AndroidManifestApplicationInstallLocation>
+		<RunAOTCompilation>False</RunAOTCompilation>
+
+		<EnableLLVM>True</EnableLLVM>
+		<PublishTrimmed>False</PublishTrimmed>
+		<DebugSymbols>True</DebugSymbols>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-android|AnyCPU'">
+	  <MandroidI18n>West;Other;</MandroidI18n>
+	  <AndroidHttpClientHandlerType>System.Net.Http.HttpClientHandler</AndroidHttpClientHandlerType>
+	  <AndroidTlsProvider>btls</AndroidTlsProvider>
+	  <TrimMode>link</TrimMode>
+	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
+	  <MandroidI18n>West;Other;</MandroidI18n>
+	  <AndroidHttpClientHandlerType>System.Net.Http.HttpClientHandler</AndroidHttpClientHandlerType>
+	  <AndroidTlsProvider>btls</AndroidTlsProvider>
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	  <TrimMode>link</TrimMode>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" Color="#512BD4" />
+
+		<!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\appiconfg.svg" Color="#512BD4" BaseSize="128,128" />
+
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+
+		<!-- Custom Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
+
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="6.0.300-rc.1.1215" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	  <PackageReference Include="Shiny" Version="2.5.0-preview.3067" />
+	  <PackageReference Include="Shiny.BluetoothLE" Version="2.5.0-preview.3067" />
+	  <PackageReference Include="Shiny.BluetoothLE.Hosting" Version="2.5.0-preview.3067" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Rug.Osc">
+	    <HintPath>Rug.Osc.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0-android'">
+	  <PackageReference Include="Xamarin.AndroidX.Core">
+	    <Version>1.7.0</Version>
+	  </PackageReference>
+	     <Reference Include="Mono.Android.Export" />
+	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionOscVrcMauiHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+
+</Project>
