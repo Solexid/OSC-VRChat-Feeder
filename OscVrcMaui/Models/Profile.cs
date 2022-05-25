@@ -29,6 +29,8 @@ namespace OscVrcMaui.Models
         DeviceRotationY,
         DeviceRotationZ,
         TouchButtonControl,
-        RadialTouchControl
+        RadialTouchControl,
+        Calories,
+        Distance
     }
 }

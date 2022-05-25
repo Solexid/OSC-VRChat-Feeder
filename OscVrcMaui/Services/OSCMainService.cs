@@ -17,15 +17,15 @@ namespace OscVrcMaui.Services
         public OSCService osc => DependencyService.Get<OSCService>();
         public DeviceSensorsService deviceSensors => DependencyService.Get<DeviceSensorsService>();
         public MiBandService band => DependencyService.Get<MiBandService>();
-        public BLEService bleHR => DependencyService.Get<BLEService>();
+        public BLEService bleService => DependencyService.Get<BLEService>();
         public ObservableLimited<String> UpdatesLogQueue = new ObservableLimited<string>();
 
         public OSCMainService()
         {
-           // osc.MessageReceived += MessageAdd;
-            band.HeartBeatRecieved += HeartBeat;
-            bleHR.HeartBeatRecieved += HeartBeat2;
-            band.StepsRecieved += Steps;
+           //osc.MessageReceived += MessageAdd;
+            bleService.HeartBeatRecieved += HeartBeat;
+            bleService.StepsDataRecieved += Steps;
+
             deviceSensors.RotationReceived += RotationSend;
             band.SleepStatusChanged += SleepChange;
 
@@ -92,50 +92,55 @@ namespace OscVrcMaui.Services
         }
 
 
-        void AddUpdate(string log) {
+      async  void AddUpdate(string log) {
 
 
-            UpdatesLogQueue?.Enqueue(log);
+             Device.InvokeOnMainThreadAsync(async () => { UpdatesLogQueue?.Enqueue(log); }); 
 
 
 
         }
-        async void HeartBeat2(int _beat)
+
+        async void Steps(int steps,int calories=-1,int distance=-1)
         {
-            var profiles = await ProfileStore.GetItemsByTypeAsync(InputType.HeartRate);
+            var profiles = await ProfileStore.GetItemsByTypeAsync(InputType.StepCount);
+            var profiles_calories = await ProfileStore.GetItemsByTypeAsync(InputType.Calories);
+            var profiles_distance = await ProfileStore.GetItemsByTypeAsync(InputType.Distance);
+
             foreach (var item in profiles)
             {
                 if (item.Normalize)
                 {
-                    var newbeat = _beat - item.MinValue;
-                    if (item.MaxValue < item.MinValue) item.MaxValue = item.MinValue + 1;
-                    float result = Math.Clamp((float)newbeat, 0, item.MaxValue - item.MinValue);
-                    result = result / (item.MaxValue - item.MinValue);
-                    await osc.SendFloatAsync(item.RootPath + item.ParameterName, result);
+                
+                    await osc.SendFloatAsync(item.RootPath + item.ParameterName, ClampAndNormalize(item.MinValue,item.MaxValue,steps));
                 }
-                else { await osc.SendIntAsync(item.RootPath + item.ParameterName, _beat); }
+                else
+                {
+                    await osc.SendIntAsync(item.RootPath + item.ParameterName, steps);
+                }
 
 
             }
-
-
-
-            AddUpdate("HR BLE:" + _beat);
-
-        }
-
-        async void Steps(int steps)
-        {
-            var profiles = await ProfileStore.GetItemsByTypeAsync(InputType.StepCount);
-            foreach (var item in profiles)
+            foreach (var item in profiles_calories)
             {
                 if (item.Normalize)
                 {
-                    var newbeat = steps - item.MinValue;
-                    if (item.MaxValue < item.MinValue) item.MaxValue = item.MinValue + 1;
-                    float result = Math.Clamp((float)newbeat, 0, item.MaxValue - item.MinValue);
-                    result = result / (item.MaxValue - item.MinValue);
-                    await osc.SendFloatAsync(item.RootPath + item.ParameterName, result);
+
+                    await osc.SendFloatAsync(item.RootPath + item.ParameterName, ClampAndNormalize(item.MinValue, item.MaxValue, calories));
+                }
+                else
+                {
+                    await osc.SendIntAsync(item.RootPath + item.ParameterName, steps);
+                }
+
+
+            }
+            foreach (var item in profiles_distance)
+            {
+                if (item.Normalize)
+                {
+
+                    await osc.SendFloatAsync(item.RootPath + item.ParameterName, ClampAndNormalize(item.MinValue, item.MaxValue, distance));
                 }
                 else
                 {
@@ -145,6 +150,8 @@ namespace OscVrcMaui.Services
 
             }
             AddUpdate("Steps:" + steps);
+            AddUpdate("Calories:" + calories);
+            AddUpdate("Distance:" + distance);
 
         }
 
@@ -164,6 +171,15 @@ namespace OscVrcMaui.Services
 
 
         }
+        float ClampAndNormalize(int min, int max, float value) {
+
+            var newres = value - min;
+            if (max < min) max = min + 1;
+            float result = Math.Clamp((float)newres, 0, max - min);
+            result = result / (max - min);
+            return result;
+
+        }
       public  async Task StartSendingBandDate()
         {
             deviceSensors.SetRotationSensorStatus(await ProfileStore.HasActiveInputs(InputType.DeviceRotationX, InputType.DeviceRotationY, InputType.DeviceRotationZ));
@@ -171,7 +187,7 @@ namespace OscVrcMaui.Services
 
             var config = configService.LoadConfig();
 
-            bleHR.InitConfig();
+            bleService.InitConfig();
             osc.SetIpAndRestart(config.VRCHostIp);
             AddUpdate("Sending Band data is started...");
 

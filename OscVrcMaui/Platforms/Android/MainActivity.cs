@@ -14,20 +14,15 @@ namespace OscVrcMaui;
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
 public partial class MainActivity : MauiAppCompatActivity
 {
-	HeartRateReceiver recv;
+	
 	SleepStatusReceiver sleeprecv;
-	StepsReceiver strecv;
 	protected override void OnCreate(Bundle savedInstanceState)
     {
 		ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.BluetoothConnect, Manifest.Permission.Bluetooth, Manifest.Permission.BluetoothScan }, 0);
-		recv = new HeartRateReceiver();
-		strecv = new StepsReceiver();
+	
 		sleeprecv = new SleepStatusReceiver();
-		RegisterReceiver(recv, new IntentFilter("com.mc.miband.heartRateGot"));
-		RegisterReceiver(strecv, new IntentFilter("com.mc.miband.stepsGot"));
-		RegisterReceiver(strecv, new IntentFilter("com.mc.miband.fellAsleep"));
-		RegisterReceiver(strecv, new IntentFilter("com.mc.miband.wokeUp"));
-		RegisterReceiver(recv, new IntentFilter("com.mc.miband1.heartRateGot"));
+		RegisterReceiver(sleeprecv, new IntentFilter("com.mc.miband.fellAsleep"));
+		RegisterReceiver(sleeprecv, new IntentFilter("com.mc.miband.wokeUp"));
 		
 		base.OnCreate(savedInstanceState);	
     }
@@ -50,33 +45,7 @@ public partial class MainActivity : MauiAppCompatActivity
 		//global::Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 }
-[BroadcastReceiver(Enabled = true)]
-[IntentFilter(new[] { "com.mc.miband.heartRateGot", "com.mc.miband1.heartRateGot" })]
 
-class HeartRateReceiver : BroadcastReceiver
-{
-	public MiBandService band => DependencyService.Get<MiBandService>();
-	public override void OnReceive(Context context, Intent intent)
-	{
-		
-
-		int value = intent.GetIntExtra("value", 0);
-		band.SetHeartBeat(value);
-	}
-}
-[BroadcastReceiver(Enabled = true)]
-[IntentFilter(new[] { "com.mc.miband.stepsGot", "com.mc.miband1.stepsGot" })]
-class StepsReceiver : BroadcastReceiver
-{
-	public MiBandService band => DependencyService.Get<MiBandService>();
-	public override void OnReceive(Context context, Intent intent)
-	{
-		// Do stuff here.
-
-		int value = intent.GetIntExtra("value", 0);
-		band.SetSteps(value);
-	}
-}
 [BroadcastReceiver(Enabled = true)]
 [IntentFilter(new[] { "com.mc.miband.tasker.fellAsleep", "com.mc.miband.tasker.wokeUp", "com.mc.miband1.tasker.fellAsleep", "com.mc.miband1.tasker.wokeUp" })]
 
