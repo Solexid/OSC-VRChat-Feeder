@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.Maui;using Microsoft.Maui.Controls;
 using OscVrcMaui.Utils;
 using Shiny.BluetoothLE;
+using OscVrcMaui.Views;
 
 namespace OscVrcMaui.ViewModels
 {
@@ -19,10 +20,8 @@ namespace OscVrcMaui.ViewModels
        
         public OSCService osc => DependencyService.Get<OSCService>();
         public DeviceSensorsService deviceSensors => DependencyService.Get<DeviceSensorsService>();
-        public BLEService bleService => DependencyService.Get<BLEService>();
+       
         public ObservableLimited<String> Messages { get; set; }
-        public ObservableCollection<IPeripheral> Devices { get; set; }
-        public IPeripheral SelectedDevice { get; set; }
 
         public string ip = "";
 
@@ -32,8 +31,7 @@ namespace OscVrcMaui.ViewModels
             set => SetProperty(ref ip, value);
         }
 
-        public Command ScanCommand { get; }
-        public Command SaveCommand { get; }
+        public Command SelectDevice { get; }
         public Command StartCommand { get; }
         public Command ResetSensors { get; }
         public Command StopCommand { get; }
@@ -43,20 +41,12 @@ namespace OscVrcMaui.ViewModels
         {
             Messages = new ObservableLimited<string>();
             Messages.Enqueue("Application started...");
-            Devices = new ObservableCollection<IPeripheral>();
+           
              Ip = configService.LoadConfig().VRCHostIp;
+            SelectDevice = new Command(async () => await Shell.Current.GoToAsync(nameof(DeviceSelectPage)));
 
-            ScanCommand = new Command(async () => { Devices.Clear(); bleService.ScanBle(); });
-            bleService.ScanDone += BleService_ScanDone;
             StartCommand = new Command(async () => await StartSendingBandData());
-            SaveCommand = new Command(async () => {
-
-                var config = configService.LoadConfig();
-                config.SelectedDeviceId = SelectedDevice.Uuid;
-                configService.WriteConfig(config);
-
-
-            });
+       
             StopCommand = new Command(async () => {
 
                 DependencyService.Get<IForegroundWorker>().StopWorker();
@@ -66,14 +56,7 @@ namespace OscVrcMaui.ViewModels
     
         }
 
-        private void BleService_ScanDone(List<IPeripheral> devices)
-        {
-
-            foreach (var item in devices)
-            {
-                Devices.Add(item);
-            }
-        }
+  
 
         public void OnAppearing() { 
         

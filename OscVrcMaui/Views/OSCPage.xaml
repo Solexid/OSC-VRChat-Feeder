@@ -7,14 +7,7 @@
              x:Class="OscVrcMaui.Views.OSCPage">
     <ContentPage.Content>
         <StackLayout Margin="10" Padding="10"  x:DataType="local:OscViewModel">
-            <Label Margin="5" HorizontalOptions="Center" FontSize="Large" TextColor="PeachPuff" Text="Press scan and select band"></Label>
-            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-   
-                <Picker VerticalTextAlignment="Center" FontSize="Large" SelectedItem="{Binding SelectedDevice}"  ItemsSource="{Binding Devices}" HorizontalOptions="Fill" MinimumWidthRequest="300" ItemDisplayBinding="{Binding Name}" ></Picker>
-
-                <Button Margin="5" Command="{Binding ScanCommand}"  FontSize="Large" Text="Scan"></Button>
-            </StackLayout>
-            <Button Margin="5" Command="{Binding SaveCommand}"  FontSize="Large" Text="Save"></Button>
+            <Button Margin="5" Command="{Binding SelectDevice}"  FontSize="Large" Text="Select device"></Button>
             <CollectionView VerticalOptions="StartAndExpand" x:Name="ItemsListView"
                 ItemsSource="{Binding Messages}"
                 SelectionMode="None">

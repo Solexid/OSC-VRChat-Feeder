@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OscVrcMaui.Views.DeviceSelectPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Margin="5" HorizontalOptions="Center" FontSize="Large" TextColor="PeachPuff" Text="Press scan and select band"></Label>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+
+                <Picker VerticalTextAlignment="Center" FontSize="Large" SelectedItem="{Binding SelectedDevice}"  ItemsSource="{Binding Devices}" HorizontalOptions="Fill" MinimumWidthRequest="300" ItemDisplayBinding="{Binding Name}" ></Picker>
+
+                <Button Margin="5" Command="{Binding ScanCommand}"  FontSize="Large" Text="Scan"></Button>
+            </StackLayout>
+            <Button Margin="5" Command="{Binding SaveCommand}"  FontSize="Large" Text="Save"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -67,7 +67,7 @@
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="Medium" />
                             <RadioButton  VerticalOptions="Center" HorizontalOptions="EndAndExpand" WidthRequest="45"  
-                                         IsEnabled="True"
+                                         IsEnabled="True" BackgroundColor="Transparent"
                             IsChecked="{Binding isActive}"  
                             ></RadioButton>
                             <StackLayout.GestureRecognizers>
