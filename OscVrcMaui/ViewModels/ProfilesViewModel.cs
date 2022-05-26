@@ -14,12 +14,13 @@ namespace OscVrcMaui.ViewModels
    public class ProfilesViewModel:BaseViewModel
     {
         private Profile _selectedItem;
-
+        public Page _page { get; set; }
         public ObservableCollection<Profile> Items { get; }
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
         public Command<Profile> ItemTapped { get; }
         public Command<Profile> ItemDoubleTapped { get; }
+        public Command<Profile> ItemDelete { get; }
 
         public ProfilesViewModel()
         {
@@ -28,7 +29,7 @@ namespace OscVrcMaui.ViewModels
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemDoubleTapped= new Command<Profile>(OnItemSelected);
             ItemTapped = new Command<Profile>(OnItemClicked);
-
+            ItemDelete =new Command<Profile>(OnDelete);
             AddItemCommand = new Command(OnAddItem);
         }
         async Task ExecuteLoadItemsCommand()
@@ -79,9 +80,16 @@ namespace OscVrcMaui.ViewModels
         {
             if (item == null)
                 return;
+            string action = await _page.DisplayActionSheet("Remove or edit profile?", "Cancel","Edit", "Remove");
+            if (action == "Remove")
+            {
+                await ProfileStore.DeleteItemAsync(item.Id);
 
-            // This will push the ItemDetailPage onto the navigation stack
-           await Shell.Current.GoToAsync($"{nameof(NewProfilePage)}?{nameof(NewProfileViewModel.ProfileId)}={item.Id}");
+            }
+            else if (action == "Edit")
+            {
+                await Shell.Current.GoToAsync($"{nameof(NewProfilePage)}?{nameof(NewProfileViewModel.ProfileId)}={item.Id}");
+            }
         }
 
         async void OnItemClicked(Profile item)
@@ -95,9 +103,21 @@ namespace OscVrcMaui.ViewModels
            
           DependencyService.Get<DeviceSensorsService>().SetRotationSensorStatus(await ProfileStore.HasActiveInputs(InputType.DeviceRotationX, InputType.DeviceRotationY, InputType.DeviceRotationZ));
 
+        }
+        async void OnDelete(Profile item)
+        {
+            if (item == null)
+                return;
+            string action = await _page.DisplayActionSheet("Remove profile?", "Cancel", "Delete");
+            if (action == "Delete") {
+                await ProfileStore.DeleteItemAsync(item.Id);
+
+            }
+    
+          
+
+
             
-            // This will push the ItemDetailPage onto the navigation stack
-            //await Shell.Current.GoToAsync($"{nameof(ProfileDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
         }
     }
 }

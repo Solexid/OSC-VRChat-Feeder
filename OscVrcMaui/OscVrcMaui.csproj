@@ -90,6 +90,10 @@
 	     <Reference Include="Mono.Android.Export" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Media\" />
+	</ItemGroup>
+
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionOscVrcMauiHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 </Project>

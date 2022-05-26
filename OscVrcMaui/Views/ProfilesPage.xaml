@@ -44,7 +44,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <StackLayout Margin="10">
-                    <Frame 
+                        <Frame 
        
        BackgroundColor="#353535"
        BorderColor="AliceBlue" 
@@ -53,36 +53,42 @@
        HorizontalOptions="Fill"
        VerticalOptions="CenterAndExpand"
        HasShadow="True">
-                        <StackLayout Padding="10" Margin="5"  HorizontalOptions="Fill" x:DataType="model:Profile" Orientation="Horizontal">
-                            <Label  HorizontalOptions="StartAndExpand" VerticalOptions="Center" Text="{Binding ProfileName}" 
+                            <StackLayout Padding="10" Margin="5"  HorizontalOptions="Fill" x:DataType="model:Profile" Orientation="Horizontal">
+                                <Label  HorizontalOptions="StartAndExpand" VerticalOptions="Center" Text="{Binding ProfileName}" 
                             LineBreakMode="NoWrap" 
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="Medium" />
-                            <Label  VerticalOptions="Center"  HorizontalOptions="StartAndExpand"  Text="{Binding ParameterName}" 
+                                <Label  VerticalOptions="Center"  HorizontalOptions="StartAndExpand"  Text="{Binding ParameterName}" 
                             LineBreakMode="NoWrap" 
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="Medium" />
-                            <Label  VerticalOptions="Center" Text="{Binding Input}" 
+                                <Label  VerticalOptions="Center" Text="{Binding Input}" 
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="Medium" />
-                            <RadioButton  VerticalOptions="Center" HorizontalOptions="EndAndExpand" WidthRequest="45"  
+                                <RadioButton  VerticalOptions="Center" HorizontalOptions="EndAndExpand" WidthRequest="45"  
                                          IsEnabled="True" BackgroundColor="Transparent"
                             IsChecked="{Binding isActive}"  
                             ></RadioButton>
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer 
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type local:ProfilesViewModel}}, Path=ItemTapped}"		
                                 CommandParameter="{Binding .}">
-                                </TapGestureRecognizer>
-                                <TapGestureRecognizer 
+                                    </TapGestureRecognizer>
+                                    <TapGestureRecognizer 
                                 NumberOfTapsRequired="2"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type local:ProfilesViewModel}}, Path=ItemDoubleTapped}"		
                                 CommandParameter="{Binding .}">
-                                </TapGestureRecognizer>
-                            </StackLayout.GestureRecognizers>
-                        </StackLayout>
+                                    </TapGestureRecognizer>
+                                    <TapGestureRecognizer 
+                                NumberOfTapsRequired="3"
+                                        
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:ProfilesViewModel}}, Path=ItemDelete}"		
+                                CommandParameter="{Binding .}">
+                                    </TapGestureRecognizer>
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
                         </Frame>
                     </StackLayout>
                 </DataTemplate>

@@ -19,6 +19,7 @@ namespace OscVrcMaui.Views
         {
             InitializeComponent();
             BindingContext = _viewModel = new ProfilesViewModel();
+            _viewModel._page = this;
         }
         protected override void OnAppearing()
         {
